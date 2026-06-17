@@ -9,7 +9,7 @@ st.set_page_config(
     page_icon="📸"
 )
 
-# Enhanced CSS - Much larger text everywhere
+# Enhanced CSS
 st.markdown("""
 <style>
     .main-header {
@@ -41,22 +41,17 @@ st.markdown("""
         margin-bottom: 0.8rem;
     }
 
-    /* Make ALL widget labels and text much larger */
+    /* Workflow section - slightly smaller text */
+    .workflow-text {
+        font-size: 1.1rem !important;
+    }
+
+    /* Controls - Large text */
     .stRadio label, .stSlider label, .stSelectbox label, .stFileUploader label {
         font-size: 1.35rem !important;
         font-weight: 600 !important;
     }
     
-    .stSlider .stMarkdown p, .stRadio p {
-        font-size: 1.25rem !important;
-    }
-    
-    /* Slider value display */
-    .stSlider [data-testid="stWidgetLabel"] {
-        font-size: 1.35rem !important;
-    }
-    
-    /* General text size boost */
     .stMarkdown, p, .stMetric label, .stMetric div {
         font-size: 1.15rem !important;
     }
@@ -79,26 +74,23 @@ st.markdown("""
 st.markdown('<h1 class="main-header">Nyquist–Shannon Sampling Explorer</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subheader">Visualize sampling, reconstruction, and aliasing in images</p>', unsafe_allow_html=True)
 
-# How Sampling Works
+# ================== HOW SAMPLING WORKS ==================
 st.markdown('<h3 class="section-header">How Sampling Works</h3>', unsafe_allow_html=True)
 
 w1, w2, w3 = st.columns(3)
 
 with w1:
-    st.markdown("**1. Original Image**")
-    st.markdown("High-resolution reference (stands in for a continuous scene)")
+    st.markdown('<p class="workflow-text"><strong>1. Original Image</strong><br>High-resolution reference (stands in for a continuous scene)</p>', unsafe_allow_html=True)
 
 with w2:
-    st.markdown("**2. Sampling**")
-    st.markdown("Downsample the image to simulate fewer spatial samples")
+    st.markdown('<p class="workflow-text"><strong>2. Sampling</strong><br>Downsample the image to simulate fewer spatial samples</p>', unsafe_allow_html=True)
 
 with w3:
-    st.markdown("**3. Reconstruction**")
-    st.markdown("Upscale back using different interpolation methods")
+    st.markdown('<p class="workflow-text"><strong>3. Reconstruction</strong><br>Upscale back using different interpolation methods</p>', unsafe_allow_html=True)
 
 st.divider()
 
-# Controls - Now with bigger labels
+# Controls
 col_ctrl1, col_ctrl2 = st.columns([1, 1])
 
 with col_ctrl1:
@@ -118,7 +110,7 @@ with col_ctrl2:
         help="Lower values = fewer samples → more aliasing and detail loss"
     )
 
-# Image functions (unchanged)
+# Image functions
 def checkerboard(size=512, block=8):
     y, x = np.indices((size, size))
     arr = (((x // block) + (y // block)) % 2) * 255
