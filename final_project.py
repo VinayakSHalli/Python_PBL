@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 import io
 
 st.set_page_config(
-    page_title="Digital Signal Sampling \& Reconstruction Simulator",
+    page_title="Digital Signal Sampling & Reconstruction Simulator",
     layout="wide",
     page_icon="🔬"
 )
@@ -64,7 +64,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown('<h1 class="main-header">Digital Signal Sampling & Reconstruction Simulator</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subheader">Explore Nyquist-Shannon's Sampling \& Reconstruction Theory in Images \& Audio Signals</p>', unsafe_allow_html=True)
+st.markdown('<p class="subheader">Explore Nyquist-Shannon's Sampling and Reconstruction Theory in Images and Audio Signals</p>', unsafe_allow_html=True)
 
 mode = st.radio(
     "Select Domain to Explore",
