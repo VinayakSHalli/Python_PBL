@@ -17,7 +17,6 @@ st.markdown("""
 <style>
     .main .block-container { padding-top: 2rem; }
 
-    /* Page title */
     .main-header {
         font-size: 3.2rem;
         font-weight: 700;
@@ -28,18 +27,13 @@ st.markdown("""
         margin-bottom: 0.2rem;
         line-height: 1.15;
     }
-
-    /* Subtitle */
     .subheader {
         text-align: center;
         color: #64748B;
         font-size: 1.4rem;
         font-weight: 400;
         margin-bottom: 2rem;
-        letter-spacing: 0.01em;
     }
-
-    /* Section headers */
     .sec-header {
         font-size: 2.0rem;
         font-weight: 600;
@@ -48,29 +42,21 @@ st.markdown("""
         padding-bottom: 0.3rem;
         border-bottom: 2px solid #DBEAFE;
     }
-
-    /* 3-col body text */
     .col-body {
         font-size: 1.1rem;
         line-height: 1.6;
         color: #475569;
     }
-    .col-body strong {
-        color: #1E3A8A;
-        font-weight: 600;
-    }
-
-    /* Image labels */
+    .col-body strong { color: #1E3A8A; font-weight: 600; }
     .image-label {
         font-size: 1.2rem;
         font-weight: 600;
         color: #1E40AF;
         text-align: center;
         margin-bottom: 0.5rem;
-        letter-spacing: 0.02em;
     }
 
-    /* All widget labels: slider, selectbox, file uploader, radio, number input */
+    /* Widget labels */
     div[data-testid="stSlider"] label,
     div[data-testid="stSelectbox"] label,
     div[data-testid="stFileUploader"] label,
@@ -78,22 +64,18 @@ st.markdown("""
     div[data-testid="stRadio"] label {
         font-size: 1.1rem !important;
         font-weight: 600 !important;
-        color: #334155 !important;
     }
 
-    /* Radio option text */
-    div[data-testid="stRadio"] div[role="radiogroup"] label span {
+    /* Radio option text — targets the actual visible span Streamlit renders */
+    div[data-testid="stRadio"] div[role="radiogroup"] > label > div > p {
         font-size: 1.1rem !important;
-        color: #334155 !important;
     }
 
     /* Metric labels */
     div[data-testid="stMetric"] label {
         font-size: 1.0rem !important;
         font-weight: 500 !important;
-        color: #64748B !important;
     }
-
     /* Metric values */
     div[data-testid="stMetric"] div[data-testid="stMetricValue"] {
         font-size: 1.6rem !important;
@@ -102,29 +84,14 @@ st.markdown("""
     }
 
     /* Alert text */
-    div[data-testid="stAlert"] p {
-        font-size: 1.1rem !important;
-    }
+    div[data-testid="stAlert"] p { font-size: 1.1rem !important; }
 
     /* Caption */
     div[data-testid="stCaptionContainer"] p {
         font-size: 0.9rem !important;
-        color: #94A3B8 !important;
     }
 
-    /* Image rounding */
-    .stImage img {
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-
-    /* Metric card polish */
-    div[data-testid="stMetric"] {
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 10px;
-        padding: 1rem 1.25rem !important;
-    }
+    .stImage img { border-radius: 8px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -361,35 +328,31 @@ elif mode == "🎵 Audio Sampling":
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=x, y=audio[:display], name="Original",
-        line=dict(color="#1E3A8A", width=2)
+        line=dict(color="#0B2545", width=2.5)
     ))
     fig.add_trace(go.Scatter(
         x=x, y=reconstructed[:display], name="Reconstructed",
-        line=dict(color="#B45309", width=2)
+        line=dict(color="#8B5E34", width=2.5)
     ))
     fig.update_layout(
         title="Original vs Reconstructed Signal",
         title_font_size=20,
         title_font_color="#1E40AF",
         height=450,
-        font=dict(size=13, color="#475569"),
+        font=dict(size=13),
         legend=dict(font=dict(size=13)),
         xaxis_title="Sample Index",
         yaxis_title="Amplitude",
-        plot_bgcolor="#F8FAFC",
-        paper_bgcolor="#FFFFFF",
-        xaxis=dict(gridcolor="#E2E8F0", linecolor="#CBD5E1"),
-        yaxis=dict(gridcolor="#E2E8F0", linecolor="#CBD5E1"),
         margin=dict(t=52, b=44, l=52, r=20),
     )
     st.plotly_chart(fig, use_container_width=True)
 
     if rate < nyquist:
-        st.error("Aliasing detected — sampling rate is below the Nyquist rate")
+        st.error("ALIASING DETECTED - Sampling below Nyquist rate")
     elif rate < 1.5 * nyquist:
-        st.warning("Acceptable reconstruction — consider raising the sampling rate")
+        st.warning("ACCEPTABLE RECONSTRUCTION")
     else:
-        st.success("High-fidelity reconstruction")
+        st.success("HIGH-FIDELITY RECONSTRUCTION")
 
 st.divider()
 st.caption("Nyquist–Shannon Sampling Explorer • Images + Audio")
