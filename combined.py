@@ -15,6 +15,9 @@ st.set_page_config(
 
 st.markdown("""
 <style>
+    .main .block-container { padding-top: 2rem; }
+
+    /* Page title */
     .main-header {
         font-size: 3.2rem;
         font-weight: 700;
@@ -22,88 +25,105 @@ st.markdown("""
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.2rem;
+        line-height: 1.15;
     }
+
+    /* Subtitle */
     .subheader {
         text-align: center;
-        color: #475569;
+        color: #64748B;
         font-size: 1.4rem;
+        font-weight: 400;
         margin-bottom: 2rem;
+        letter-spacing: 0.01em;
     }
-    .section-header-lg {
+
+    /* Section headers */
+    .sec-header {
         font-size: 2.0rem;
         font-weight: 600;
         color: #1E40AF;
-        margin: 2rem 0 1rem 0;
+        margin: 2rem 0 0.8rem 0;
+        padding-bottom: 0.3rem;
+        border-bottom: 2px solid #DBEAFE;
     }
-    .section-header-md {
-        font-size: 1.7rem;
+
+    /* 3-col body text */
+    .col-body {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #475569;
+    }
+    .col-body strong {
+        color: #1E3A8A;
+        font-weight: 600;
+    }
+
+    /* Image labels */
+    .image-label {
+        font-size: 1.2rem;
         font-weight: 600;
         color: #1E40AF;
-        margin: 2rem 0 1rem 0;
-    }
-    .image-label {
-        font-size: 1.6rem;
-        font-weight: 600;
-        color: #FFFFFF;
         text-align: center;
-        margin-bottom: 0.8rem;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-    }
-    .col-body {
-        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.02em;
     }
 
-    /* Radio: "Select Domain to Explore" label + options */
-    div[data-testid="stRadio"]:has(> label) > label {
-        font-size: 2rem !important;
-        font-weight: 600 !important;
-    }
-    div[data-testid="stRadio"] div[role="radiogroup"] label span {
-        font-size: 2rem !important;
-    }
-
-    /* Image Source radio label + options */
-    .source-radio label {
-        font-size: 2rem !important;
-        font-weight: 600 !important;
-    }
-    .source-radio div[role="radiogroup"] label span {
-        font-size: 1.7rem !important;
-    }
-
-    /* Slider, selectbox, file uploader, number input labels (image section) */
+    /* All widget labels: slider, selectbox, file uploader, radio, number input */
     div[data-testid="stSlider"] label,
     div[data-testid="stSelectbox"] label,
-    div[data-testid="stFileUploader"] label {
-        font-size: 1.7rem !important;
+    div[data-testid="stFileUploader"] label,
+    div[data-testid="stNumberInput"] label,
+    div[data-testid="stRadio"] label {
+        font-size: 1.1rem !important;
         font-weight: 600 !important;
+        color: #334155 !important;
     }
 
-    /* Number input label (audio section) — overridden inline via container */
-    div[data-testid="stNumberInput"] label {
-        font-size: 2rem !important;
-        font-weight: 600 !important;
+    /* Radio option text */
+    div[data-testid="stRadio"] div[role="radiogroup"] label span {
+        font-size: 1.1rem !important;
+        color: #334155 !important;
     }
 
     /* Metric labels */
     div[data-testid="stMetric"] label {
-        font-size: 1.7rem !important;
+        font-size: 1.0rem !important;
+        font-weight: 500 !important;
+        color: #64748B !important;
     }
+
     /* Metric values */
     div[data-testid="stMetric"] div[data-testid="stMetricValue"] {
-        font-size: 1.8rem !important;
-        font-weight: 700;
+        font-size: 1.6rem !important;
+        font-weight: 700 !important;
+        color: #1E3A8A !important;
     }
 
     /* Alert text */
     div[data-testid="stAlert"] p {
-        font-size: 1.8rem !important;
+        font-size: 1.1rem !important;
     }
 
     /* Caption */
     div[data-testid="stCaptionContainer"] p {
-        font-size: 1.7rem !important;
+        font-size: 0.9rem !important;
+        color: #94A3B8 !important;
+    }
+
+    /* Image rounding */
+    .stImage img {
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    /* Metric card polish */
+    div[data-testid="stMetric"] {
+        background: #F8FAFC;
+        border: 1px solid #E2E8F0;
+        border-radius: 10px;
+        padding: 1rem 1.25rem !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -122,7 +142,7 @@ st.divider()
 # ====================== IMAGE SAMPLING ======================
 if mode == "🖼️ Image Sampling":
 
-    st.markdown('<h3 class="section-header-md">How Sampling Works</h3>', unsafe_allow_html=True)
+    st.markdown('<h2 class="sec-header">How Sampling Works</h2>', unsafe_allow_html=True)
     w1, w2, w3 = st.columns(3)
     with w1:
         st.markdown('<p class="col-body"><strong>1. Original Image</strong><br>High-resolution reference</p>', unsafe_allow_html=True)
@@ -203,7 +223,7 @@ if mode == "🖼️ Image Sampling":
         m = np.mean((np.array(img, dtype=np.float32) - np.array(recon, dtype=np.float32)) ** 2)
         p = float("inf") if m == 0 else 20 * math.log10(255.0 / math.sqrt(m))
 
-        st.markdown('<h3 class="section-header-md">Visual Comparison</h3>', unsafe_allow_html=True)
+        st.markdown('<h2 class="sec-header">Visual Comparison</h2>', unsafe_allow_html=True)
         c1, c2, c3 = st.columns(3)
         with c1:
             st.markdown('<p class="image-label">Original</p>', unsafe_allow_html=True)
@@ -216,7 +236,7 @@ if mode == "🖼️ Image Sampling":
             st.image(recon, use_container_width=True)
 
         st.divider()
-        st.markdown('<h3 class="section-header-lg">Quality Metrics</h3>', unsafe_allow_html=True)
+        st.markdown('<h2 class="sec-header">Quality Metrics</h2>', unsafe_allow_html=True)
         m1, m2, m3 = st.columns(3)
         with m1: st.metric("Sampled Resolution", f"{sw} × {sh}")
         with m2: st.metric("Mean Squared Error (MSE)", f"{m:.2f}")
@@ -233,8 +253,8 @@ if mode == "🖼️ Image Sampling":
 # ====================== AUDIO SAMPLING ======================
 elif mode == "🎵 Audio Sampling":
 
-    st.markdown('<h3 class="section-header-md">Upload Audio Signal (.wav)</h3>', unsafe_allow_html=True)
-    uploaded_file = st.file_uploader("", type=["wav"], label_visibility="collapsed")
+    st.markdown('<h2 class="sec-header">Audio Signal Sampling</h2>', unsafe_allow_html=True)
+    uploaded_file = st.file_uploader("Upload Audio Signal (.wav)", type=["wav"])
 
     def load_audio(file_obj):
         fs, audio = wavfile.read(file_obj)
@@ -253,7 +273,7 @@ elif mode == "🎵 Audio Sampling":
             st.warning("Please upload a .wav file to begin")
             st.stop()
 
-    st.markdown('<h3 class="section-header-md">Original Signal</h3>', unsafe_allow_html=True)
+    st.markdown('<h2 class="sec-header">Original Signal</h2>', unsafe_allow_html=True)
     st.audio((audio * 32767).astype(np.int16), sample_rate=fs)
 
     fft_vals = np.abs(np.fft.rfft(audio))
@@ -323,13 +343,13 @@ elif mode == "🎵 Audio Sampling":
     if max_amp > 0:
         reconstructed_audio = reconstructed_audio / max_amp
 
-    st.markdown('<h3 class="section-header-md">Reconstructed Signal</h3>', unsafe_allow_html=True)
+    st.markdown('<h2 class="sec-header">Reconstructed Signal</h2>', unsafe_allow_html=True)
     st.audio((reconstructed_audio * 32767).astype(np.int16), sample_rate=fs)
 
     error = audio - reconstructed
     accuracy = max(0, min(100, 100 - np.mean(np.abs(error)) * 100))
 
-    st.markdown('<h2 class="section-header-lg">Signal Metrics</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="sec-header">Signal Metrics</h2>', unsafe_allow_html=True)
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("Dominant Frequency", f"{dominant_frequency:.2f} Hz")
     m2.metric("Nyquist Rate", f"{nyquist} Hz")
@@ -339,20 +359,37 @@ elif mode == "🎵 Audio Sampling":
     display = min(4000, len(audio))
     x = np.arange(display)
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=x, y=audio[:display], name="Original", line=dict(color="#0B2545", width=2.5)))
-    fig.add_trace(go.Scatter(x=x, y=reconstructed[:display], name="Reconstructed", line=dict(color="#8B5E34", width=2.5)))
+    fig.add_trace(go.Scatter(
+        x=x, y=audio[:display], name="Original",
+        line=dict(color="#1E3A8A", width=2)
+    ))
+    fig.add_trace(go.Scatter(
+        x=x, y=reconstructed[:display], name="Reconstructed",
+        line=dict(color="#B45309", width=2)
+    ))
     fig.update_layout(
         title="Original vs Reconstructed Signal",
-        title_font_size=28,
-        height=450
+        title_font_size=20,
+        title_font_color="#1E40AF",
+        height=450,
+        font=dict(size=13, color="#475569"),
+        legend=dict(font=dict(size=13)),
+        xaxis_title="Sample Index",
+        yaxis_title="Amplitude",
+        plot_bgcolor="#F8FAFC",
+        paper_bgcolor="#FFFFFF",
+        xaxis=dict(gridcolor="#E2E8F0", linecolor="#CBD5E1"),
+        yaxis=dict(gridcolor="#E2E8F0", linecolor="#CBD5E1"),
+        margin=dict(t=52, b=44, l=52, r=20),
     )
     st.plotly_chart(fig, use_container_width=True)
 
     if rate < nyquist:
-        st.error("ALIASING DETECTED - Sampling below Nyquist rate")
+        st.error("Aliasing detected — sampling rate is below the Nyquist rate")
     elif rate < 1.5 * nyquist:
-        st.warning("ACCEPTABLE RECONSTRUCTION")
+        st.warning("Acceptable reconstruction — consider raising the sampling rate")
     else:
-        st.success("HIGH-FIDELITY RECONSTRUCTION")
+        st.success("High-fidelity reconstruction")
 
+st.divider()
 st.caption("Nyquist–Shannon Sampling Explorer • Images + Audio")
