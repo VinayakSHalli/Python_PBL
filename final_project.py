@@ -169,11 +169,11 @@ if mode == "🖼️ Image Sampling":
             st.image(recon, use_container_width=True)
 
         st.divider()
-            st.markdown('<h3 class="section-header">Quality Metrics</h3>', unsafe_allow_html=True)
-            m1, m2, m3 = st.columns(3)
-            with m1: st.metric("Sampled Resolution", f"{sw} × {sh}")
-            with m2: st.metric("Mean Squared Error (MSE)", f"{m:.2f}")
-            with m3: st.metric("PSNR (dB)", "∞" if np.isinf(p) else f"{p:.2f}")
+        st.markdown('<h3 class="section-header">Quality Metrics</h3>', unsafe_allow_html=True)
+        m1, m2, m3 = st.columns(3)
+        with m1: st.metric("Sampled Resolution", f"{sw} × {sh}")
+        with m2: st.metric("Mean Squared Error (MSE)", f"{m:.2f}")
+        with m3: st.metric("PSNR (dB)", "∞" if np.isinf(p) else f"{p:.2f}")
 
         # Nyquist feedback now shown for uploaded images as well
             if sampling >= 60:
