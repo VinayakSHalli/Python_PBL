@@ -176,12 +176,12 @@ if mode == "🖼️ Image Sampling":
         with m3: st.metric("PSNR (dB)", "∞" if np.isinf(p) else f"{p:.2f}")
 
         # Nyquist feedback now shown for uploaded images as well
-            if sampling >= 60:
-                st.success("✅ Nyquist condition likely satisfied — Good reconstruction")
-            elif sampling >= 35:
-                st.warning("⚠️ Borderline sampling — Some aliasing may appear")
-            else:
-                st.error("❌ Severe undersampling — Strong aliasing expected")
+        if sampling >= 60:
+            st.success("✅ Nyquist condition likely satisfied — Good reconstruction")
+        elif sampling >= 35:
+            st.warning("⚠️ Borderline sampling — Some aliasing may appear")
+        else:
+            st.error("❌ Severe undersampling — Strong aliasing expected")
 
 # ====================== AUDIO SAMPLING ======================
 elif mode == "🎵 Audio Sampling":
