@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 import math
 
-# 1. Page Configuration (Always first)
+# 1. Page Configuration (Must be the very first Streamlit command)
 st.set_page_config(
     page_title="Nyquist–Shannon Image Sampling Explorer", 
     layout="wide",
@@ -83,12 +83,14 @@ with st.sidebar:
         ["Upload image", "Checkerboard", "Vertical stripes"]
     )
     
+    img = None
     if source == "Upload image":
         up = st.file_uploader("Upload PNG/JPG", type=["png", "jpg", "jpeg"])
-        img = Image.open(up).convert("RGB") if up else None
+        if up:
+            img = Image.open(up).convert("RGB")
     elif source == "Checkerboard":
         img = checkerboard()
-    else:
+    elif source == "Vertical stripes":
         img = vertical_stripes()
         
     st.divider()
@@ -107,3 +109,5 @@ with st.sidebar:
 
 # --- Main App Layout ---
 st.title("✨ Nyquist–Shannon Image Sampling & Reconstruction Simulator")
+st.markdown(
+    "Explore how spatial downsampling and subsequent up
