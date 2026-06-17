@@ -49,7 +49,6 @@ st.markdown("""
         font-size: 1.35rem !important;
         font-weight: 600 !important;
     }
-    /* Larger radio buttons */
     div[data-testid="stRadio"] label {
         font-size: 1.55rem !important;
         font-weight: 700 !important;
@@ -76,7 +75,6 @@ st.divider()
 
 # ====================== IMAGE SAMPLING ======================
 if mode == "🖼️ Image Sampling":
-   
     st.markdown('<h3 class="section-header">How Sampling Works</h3>', unsafe_allow_html=True)
     w1, w2, w3 = st.columns(3)
     with w1:
@@ -227,7 +225,7 @@ elif mode == "🎵 Audio Sampling":
     sample_pos = np.arange(0, len(sampled) * step, step)
     full_pos = np.arange(len(audio))
 
-    # Reconstruction functions
+    # Reconstruction functions (unchanged)
     def lanczos_kernel(x, a=3):
         x = np.array(x, dtype=float)
         out = np.sinc(x) * np.sinc(x / a)
@@ -289,7 +287,7 @@ elif mode == "🎵 Audio Sampling":
     m3.metric("Sampling Rate", f"{rate} Hz")
     m4.metric("Accuracy", f"{accuracy:.2f}%")
 
-    # Plot - Updated with Light Blue for Original
+    # Plot - Clean version (no forced white background)
     display = min(4000, len(audio))
     x = np.arange(display)
     fig = go.Figure()
@@ -298,7 +296,7 @@ elif mode == "🎵 Audio Sampling":
         x=x, 
         y=audio[:display], 
         name="Original", 
-        line=dict(color="#60A5FA", width=2.8)   # Light Blue
+        line=dict(color="#60A5FA", width=2.8)
     ))
     
     fig.add_trace(go.Scatter(
@@ -311,9 +309,8 @@ elif mode == "🎵 Audio Sampling":
     fig.update_layout(
         title="Original vs Reconstructed Signal",
         height=450,
-        plot_bgcolor="#f8fafc",
-        paper_bgcolor="#ffffff",
         legend=dict(font=dict(size=14))
+        # Removed plot_bgcolor and paper_bgcolor → uses default
     )
     st.plotly_chart(fig, use_container_width=True)
 
