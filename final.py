@@ -105,4 +105,74 @@ else:
 interp_options = {
     "Nearest": "🟦 Nearest (Blocky)",
     "Bilinear": "🟩 Bilinear (Smooth)",
-    "Bicubic": "🟨 Bicubic (Good
+    "Bicubic": "🟨 Bicubic (Good detail)",
+    "Lanczos": "⭐ Lanczos (Sharpest)",
+    "Sinc (Ideal Approximation)": "📐 Sinc (Theoretical best)"
+}
+
+interp_name = st.selectbox(
+    "🔬 Reconstruction Method",
+    list(interp_options.keys()),
+    format_func=lambda x: interp_options[x]
+)
+
+# Processing
+if img is not None:
+    w, h = img.size
+    sw = max(1, int(w * sampling / 100))
+    sh = max(1, int(h * sampling / 100))
+
+    sampled = img.resize((sw, sh), Image.Resampling.BOX)
+
+    if interp_name == "Sinc (Ideal Approximation)":
+        recon = sampled.resize((w, h), Image.Resampling.LANCZOS)
+    else:
+        interp_map = {
+            "Nearest": Image.Resampling.NEAREST,
+            "Bilinear": Image.Resampling.BILINEAR,
+            "Bicubic": Image.Resampling.BICUBIC,
+            "Lanczos": Image.Resampling.LANCZOS
+        }
+        recon = sampled.resize((w, h), interp_map[interp_name])
+
+    m = np.mean((np.array(img, dtype=np.float32) - np.array(recon, dtype=np.float32)) ** 2)
+    p = float("inf") if m == 0 else 20 * math.log10(255.0 / math.sqrt(m))
+
+    # Visual Comparison
+    st.markdown('<h3 class="section-header">📊 Visual Comparison</h3>', unsafe_allow_html=True)
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.image(img, caption="**Original**", use_container_width=True)
+    with c2:
+        st.image(sampled, caption=f"**Sampled** ({sw} × {sh})", use_container_width=True)
+    with c3:
+        st.image(recon, caption="**Reconstructed**", use_container_width=True)
+
+    st.divider()
+
+    # Quality Metrics
+    st.markdown('<h3 class="section-header">📈 Quality Metrics</h3>', unsafe_allow_html=True)
+    m1, m2, m3 = st.columns(3)
+    with m1:
+        st.metric("Sampled Resolution", f"{sw} × {sh}")
+    with m2:
+        st.metric("Mean Squared Error (MSE)", f"{m:.2f}")
+    with m3:
+        st.metric("PSNR (dB)", "∞" if np.isinf(p) else f"{p:.2f}")
+
+    # Insights
+    st.divider()
+    if source != "Upload image":
+        if sampling >= 60:
+            st.success("✅ Nyquist condition likely satisfied — Good reconstruction")
+        elif sampling >= 35:
+            st.warning("⚠️ Borderline sampling — Some aliasing may appear")
+        else:
+            st.error("❌ Severe undersampling — Strong aliasing expected")
+    else:
+        st.info("**Note**: Real photos lose fine detail at lower sampling rates.")
+
+else:
+    st.info("👆 Choose a pattern or upload an image to begin")
+
+st.caption("Nyquist–Shannon Image Sampling & Reconstruction Simulator")
