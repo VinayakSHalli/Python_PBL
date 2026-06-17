@@ -13,84 +13,115 @@ st.set_page_config(
     page_icon="🔬"
 )
 
-# ====================== FINAL CSS - STRONG HIERARCHY ======================
+# ====================== IMPROVED & CONSISTENT CSS ======================
 st.markdown("""
 <style>
+    /* Root Typography Reset */
+    .main .block-container {
+        padding-top: 2rem;
+    }
+    
+    /* Main Title */
     .main-header {
-        font-size: 3.6rem;
+        font-size: 3.2rem !important;
         font-weight: 700;
         background: linear-gradient(90deg, #1E3A8A, #3B82F6);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.4rem;
+        line-height: 1.1;
     }
+    
+    /* Subheader */
     .subheader {
         text-align: center;
         color: #475569;
-        font-size: 1.65rem;
-        margin-bottom: 2.5rem;
+        font-size: 1.55rem !important;
+        font-weight: 500;
+        margin-bottom: 2rem;
+        line-height: 1.4;
     }
-
-    /* MODE SELECTOR - Very Prominent */
+    
+    /* Section Headers - Strong hierarchy */
+    .section-header {
+        font-size: 2.1rem !important;
+        font-weight: 700;
+        color: #1E40AF;
+        margin: 2.8rem 0 1.2rem 0;
+        border-left: 5px solid #3B82F6;
+        padding-left: 1rem;
+    }
+    
+    /* Mode selector */
     .stRadio > label {
-        font-size: 1.85rem !important;
+        font-size: 1.75rem !important;
         font-weight: 700 !important;
         color: #1E3A8A;
     }
     .stRadio div[role="radiogroup"] label {
-        font-size: 1.7rem !important;
+        font-size: 1.65rem !important;
         font-weight: 600;
     }
-
-    /* Section Headers */
-    .section-header {
-        font-size: 2.35rem;
-        font-weight: 700;
-        color: #1E40AF;
-        margin: 2.6rem 0 1.4rem 0;
-    }
-
-    /* Image Labels - Large & Clear */
-    .image-label {
-        font-size: 2.05rem !important;
-        font-weight: 600;
-        color: #FFFFFF !important;
-        text-align: center;
-        margin-bottom: 0.8rem;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.7);
-    }
-
-    /* Control Labels - Increased */
-    .stSelectbox label, 
-    .stRadio label:not(.stRadio > label), 
-    .stSlider label, 
-    .stNumberInput label, 
+    
+    /* Widget Labels - Consistent & Prominent */
+    .stSelectbox label,
+    .stRadio label:not(.stRadio > label),
+    .stSlider label,
+    .stNumberInput label,
     .stFileUploader label {
-        font-size: 1.6rem !important;
+        font-size: 1.45rem !important;
         font-weight: 600 !important;
+        color: #334155;
     }
-
+    
     /* Metrics */
     .stMetric label {
-        font-size: 1.65rem !important;
+        font-size: 1.35rem !important;
         font-weight: 600 !important;
     }
     .stMetric [data-testid="stMetricValue"] {
-        font-size: 2.45rem !important;
+        font-size: 2.35rem !important;
         font-weight: 700;
         color: #1E3A8A;
     }
-
-    /* General Text */
-    p, .stMarkdown, div {
-        font-size: 1.2rem;
-        line-height: 1.65;
+    
+    /* Image Labels */
+    .image-label {
+        font-size: 1.85rem !important;
+        font-weight: 700;
+        color: #1E3A8A !important;
+        text-align: center;
+        margin: 0.6rem 0 0.8rem 0;
     }
-
+    
+    /* General Content */
+    p, .stMarkdown, div[data-testid="stMarkdownContainer"] {
+        font-size: 1.15rem !important;
+        line-height: 1.7;
+        color: #374151;
+    }
+    
+    /* Strong text inside markdown */
+    strong {
+        color: #1E40AF;
+    }
+    
+    /* Plotly improvements */
+    .js-plotly-plot .plotly .modebar,
+    .js-plotly-plot .plotly .title {
+        font-size: 1.3rem !important;
+    }
+    
+    /* Captions & Helpers */
+    .stCaption, .stAlert {
+        font-size: 1.1rem !important;
+    }
+    
+    /* Image styling */
     .stImage img {
         border-radius: 12px;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.12);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -104,14 +135,12 @@ mode = st.radio(
     ["🖼️ Image Sampling", "🎵 Audio Sampling"],
     horizontal=True
 )
-
 st.divider()
 
 # ====================== IMAGE SAMPLING ======================
 if mode == "🖼️ Image Sampling":
-    
     st.markdown('<h3 class="section-header">How Sampling Works</h3>', unsafe_allow_html=True)
-    
+   
     w1, w2, w3 = st.columns(3)
     with w1:
         st.markdown('<p><strong>1. Original Image</strong><br>High-resolution reference</p>', unsafe_allow_html=True)
@@ -119,7 +148,6 @@ if mode == "🖼️ Image Sampling":
         st.markdown('<p><strong>2. Sampling</strong><br>Downsample (fewer spatial samples)</p>', unsafe_allow_html=True)
     with w3:
         st.markdown('<p><strong>3. Reconstruction</strong><br>Upscale with interpolation</p>', unsafe_allow_html=True)
-
     st.divider()
 
     col_ctrl1, col_ctrl2 = st.columns([1, 1])
@@ -135,7 +163,7 @@ if mode == "🖼️ Image Sampling":
             min_value=5, max_value=100, value=100, step=5
         )
 
-    # Image helper functions
+    # Image helper functions (unchanged)
     def checkerboard(size=512, block=8):
         y, x = np.indices((size, size))
         arr = (((x // block) + (y // block)) % 2) * 255
@@ -165,7 +193,6 @@ if mode == "🖼️ Image Sampling":
         "Lanczos": "Lanczos (Sharpest)",
         "Sinc (Ideal Approximation)": "Sinc (Theoretical best)"
     }
-
     interp_name = st.selectbox(
         "Reconstruction Method",
         list(interp_options.keys()),
@@ -176,9 +203,8 @@ if mode == "🖼️ Image Sampling":
         w, h = img.size
         sw = max(1, int(w * sampling / 100))
         sh = max(1, int(h * sampling / 100))
-
         sampled = img.resize((sw, sh), Image.Resampling.BOX)
-
+        
         if interp_name == "Sinc (Ideal Approximation)":
             recon = sampled.resize((w, h), Image.Resampling.LANCZOS)
         else:
@@ -223,7 +249,7 @@ if mode == "🖼️ Image Sampling":
 # ====================== AUDIO SAMPLING ======================
 elif mode == "🎵 Audio Sampling":
     st.markdown('<h3 class="section-header">Audio Signal Sampling</h3>', unsafe_allow_html=True)
-    
+   
     st.markdown("### Upload Audio Signal (.wav)")
     uploaded_file = st.file_uploader("", type=["wav"], label_visibility="collapsed")
 
@@ -247,7 +273,7 @@ elif mode == "🎵 Audio Sampling":
     st.markdown("### Original Signal")
     st.audio((audio * 32767).astype(np.int16), sample_rate=fs)
 
-    # FFT Analysis
+    # FFT Analysis (unchanged)
     fft_vals = np.abs(np.fft.rfft(audio))
     fft_freqs = np.fft.rfftfreq(len(audio), 1/fs)
     dominant_frequency = float(fft_freqs[np.argmax(fft_vals[1:]) + 1])
@@ -259,16 +285,15 @@ elif mode == "🎵 Audio Sampling":
     with col1:
         rate = int(st.number_input("Sampling Rate (Hz)", min_value=1, value=max(1000, nyquist), step=100))
     with col2:
-        method = st.selectbox("Reconstruction Method", 
+        method = st.selectbox("Reconstruction Method",
                             ["Nearest Neighbor", "Linear", "Cubic", "Lanczos", "Sinc"])
 
-    # Sampling & Reconstruction
+    # Sampling & Reconstruction logic (unchanged - kept as-is)
     step = max(1, int(fs / rate))
     sampled = audio[::step]
     sample_pos = np.arange(0, len(sampled) * step, step)
     full_pos = np.arange(len(audio))
 
-    # (Your reconstruction functions)
     def lanczos_kernel(x, a=3):
         x = np.array(x, dtype=float)
         out = np.sinc(x) * np.sinc(x / a)
@@ -323,7 +348,7 @@ elif mode == "🎵 Audio Sampling":
     error = audio - reconstructed
     accuracy = max(0, min(100, 100 - np.mean(np.abs(error)) * 100))
 
-    st.markdown("## Signal Metrics")
+    st.markdown('<h3 class="section-header">Signal Metrics</h3>', unsafe_allow_html=True)
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("Dominant Frequency", f"{dominant_frequency:.2f} Hz")
     m2.metric("Nyquist Rate", f"{nyquist} Hz")
@@ -336,7 +361,14 @@ elif mode == "🎵 Audio Sampling":
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=x, y=audio[:display], name="Original", line=dict(color="#0B2545", width=2.5)))
     fig.add_trace(go.Scatter(x=x, y=reconstructed[:display], name="Reconstructed", line=dict(color="#8B5E34", width=2.5)))
-    fig.update_layout(title="Original vs Reconstructed Signal", height=450)
+    fig.update_layout(
+        title="Original vs Reconstructed Signal (first 4000 samples)",
+        height=480,
+        title_font_size=18,
+        legend_font_size=14,
+        xaxis_title="Sample Index",
+        yaxis_title="Amplitude"
+    )
     st.plotly_chart(fig, use_container_width=True)
 
     if rate < nyquist:
