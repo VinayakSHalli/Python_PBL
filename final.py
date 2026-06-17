@@ -4,12 +4,12 @@ from PIL import Image
 import math
 
 st.set_page_config(
-    page_title="Nyquist–Shannon Image Sampling & Reconstruction Simulator",
+    page_title="Nyquist–Shannon Image Sampling Explorer",
     layout="wide",
     page_icon="📸"
 )
 
-# Enhanced CSS
+# Enhanced CSS with your requested adjustments
 st.markdown("""
 <style>
     .main-header {
@@ -33,8 +33,10 @@ st.markdown("""
         color: #1E40AF;
         margin: 2rem 0 1.2rem 0;
     }
+
+    /* Image labels - Increased size */
     .image-label {
-        font-size: 1.75rem;
+        font-size: 1.85rem !important;     /* Bigger as requested */
         font-weight: 600;
         color: #FFFFFF !important;
         text-align: center;
@@ -42,17 +44,18 @@ st.markdown("""
         text-shadow: 0 2px 4px rgba(0,0,0,0.6);
     }
 
-    /* Make dropdown options same size as the label */
+    /* Dropdown label (Reconstruction Method) - remains large */
     .stSelectbox label {
         font-size: 1.35rem !important;
         font-weight: 600 !important;
     }
     
+    /* Dropdown options (Nearest (Blocky), etc.) - Reduced size */
     .stSelectbox select, 
     .stSelectbox div[data-baseweb="select"],
     .stSelectbox div[role="listbox"] div,
     .stSelectbox option {
-        font-size: 1.35rem !important;
+        font-size: 1.15rem !important;     /* Reduced as requested */
     }
 
     /* Workflow section */
@@ -66,18 +69,20 @@ st.markdown("""
         font-weight: 600 !important;
     }
     
-    /* Bigger metric titles */
+    /* Quality Metrics - Bigger values */
     .stMetric label {
         font-size: 1.45rem !important;
         font-weight: 600 !important;
     }
     
-    .stMarkdown, p, .stMetric div {
-        font-size: 1.15rem !important;
+    /* Metric values (the actual numbers) - Increased size */
+    .stMetric [data-testid="stMetricValue"] {
+        font-size: 2.1rem !important;
+        font-weight: 700;
     }
     
-    .stMetric {
-        font-size: 1.35rem;
+    .stMarkdown, p, .stMetric div {
+        font-size: 1.15rem !important;
     }
     
     .stImage img {
@@ -228,3 +233,5 @@ if img is not None:
 
 else:
     st.info("Choose a pattern or upload an image to begin")
+
+st.caption("Nyquist–Shannon Image Sampling & Reconstruction Simulator")
