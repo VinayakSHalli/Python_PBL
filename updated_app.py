@@ -6,7 +6,7 @@ import math
 
 st.set_page_config(page_title="Nyquist–Shannon Image Sampling Explorer", layout="wide")
 
-st.title("📷 Nyquist–Shannon Image Sampling & Reconstruction Simulator")
+st.title("Nyquist–Shannon Image Sampling & Reconstruction Simulator")
 
 st.markdown("""
 **Workflow**
