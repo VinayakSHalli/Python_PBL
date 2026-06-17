@@ -9,11 +9,11 @@ st.set_page_config(
     page_icon="📸"
 )
 
-# Enhanced CSS with larger fonts
+# Enhanced CSS - Much larger text everywhere
 st.markdown("""
 <style>
     .main-header {
-        font-size: 3.2rem;
+        font-size: 3.3rem;
         font-weight: 700;
         background: linear-gradient(90deg, #1E3A8A, #3B82F6);
         -webkit-background-clip: text;
@@ -24,32 +24,54 @@ st.markdown("""
     .subheader {
         text-align: center;
         color: #475569;
-        font-size: 1.35rem;
+        font-size: 1.45rem;
         margin-bottom: 2.2rem;
     }
     .section-header {
-        font-size: 1.85rem;
+        font-size: 2.0rem;
         font-weight: 600;
         color: #1E40AF;
         margin: 2rem 0 1.2rem 0;
     }
     .image-label {
-        font-size: 1.55rem;
+        font-size: 1.75rem;
         font-weight: 600;
         color: #1E3A8A;
         text-align: center;
-        margin-bottom: 0.6rem;
+        margin-bottom: 0.8rem;
     }
+
+    /* Make ALL widget labels and text much larger */
+    .stRadio label, .stSlider label, .stSelectbox label, .stFileUploader label {
+        font-size: 1.35rem !important;
+        font-weight: 600 !important;
+    }
+    
+    .stSlider .stMarkdown p, .stRadio p {
+        font-size: 1.25rem !important;
+    }
+    
+    /* Slider value display */
+    .stSlider [data-testid="stWidgetLabel"] {
+        font-size: 1.35rem !important;
+    }
+    
+    /* General text size boost */
+    .stMarkdown, p, .stMetric label, .stMetric div {
+        font-size: 1.15rem !important;
+    }
+    
+    .stMetric {
+        font-size: 1.3rem;
+    }
+    
+    h1, h2, h3, h4 {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    
     .stImage img {
         border-radius: 12px;
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    }
-    /* Overall larger text */
-    .stMarkdown, .stMetric, .stRadio, .stSlider, .stSelectbox {
-        font-size: 1.1rem;
-    }
-    h1, h2, h3, h4 {
-        font-family: 'Segoe UI', system-ui, sans-serif;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -76,7 +98,7 @@ with w3:
 
 st.divider()
 
-# Controls
+# Controls - Now with bigger labels
 col_ctrl1, col_ctrl2 = st.columns([1, 1])
 
 with col_ctrl1:
@@ -96,7 +118,7 @@ with col_ctrl2:
         help="Lower values = fewer samples → more aliasing and detail loss"
     )
 
-# Image functions
+# Image functions (unchanged)
 def checkerboard(size=512, block=8):
     y, x = np.indices((size, size))
     arr = (((x // block) + (y // block)) % 2) * 255
@@ -156,7 +178,7 @@ if img is not None:
     m = np.mean((np.array(img, dtype=np.float32) - np.array(recon, dtype=np.float32)) ** 2)
     p = float("inf") if m == 0 else 20 * math.log10(255.0 / math.sqrt(m))
 
-    # Visual Comparison - Labels above images
+    # Visual Comparison
     st.markdown('<h3 class="section-header">Visual Comparison</h3>', unsafe_allow_html=True)
     
     c1, c2, c3 = st.columns(3)
@@ -185,7 +207,6 @@ if img is not None:
     with m3:
         st.metric("PSNR (dB)", "∞" if np.isinf(p) else f"{p:.2f}")
 
-    # Insights
     st.divider()
     if source != "Upload image":
         if sampling >= 60:
