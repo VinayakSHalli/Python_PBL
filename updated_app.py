@@ -64,15 +64,30 @@ else:
 
 sampling = st.slider("Effective Sampling Density (%)", 5, 100, 100, 5)
 
+### Reconstruction Methods
+#- **Nearest:** Copies the nearest pixel. Fast but blocky.
+#- **Bilinear:** Averages nearby pixels for smoother results.
+#- **Bicubic:** Uses more neighbors to preserve detail better.
+#- **Lanczos:** Uses a windowed sinc kernel and often produces the sharpest reconstruction.
+#- **Sinc (Ideal Approximation):** Theoretically perfect for band-limited signals under the Nyquist criterion. 
+#In this demo, it is approximated using Lanczos because standard image libraries do not provide an exact infinite sinc interpolator.
+
 interp_name = st.selectbox(
     "Reconstruction interpolation",
-    ["Nearest","Bilinear","Bicubic"]
+    [
+        "Nearest",
+        "Bilinear",
+        "Bicubic",
+        "Lanczos",
+        "Sinc (Ideal Approximation)"
+    ]
 )
 
 interp_map = {
     "Nearest": Image.Resampling.NEAREST,
     "Bilinear": Image.Resampling.BILINEAR,
-    "Bicubic": Image.Resampling.BICUBIC
+    "Bicubic": Image.Resampling.BICUBIC,
+    "Lanczos": Image.Resampling.LANCZOS
 }
 
 if img is not None:
@@ -81,7 +96,12 @@ if img is not None:
     sh=max(1,int(h*sampling/100))
 
     sampled = img.resize((sw,sh), Image.Resampling.BOX)
-    recon = sampled.resize((w,h), interp_map[interp_name])
+    if interp_name == "Sinc (Ideal Approximation)":
+    # Pillow has no true sinc interpolator.
+    # Lanczos uses a windowed sinc kernel and is the closest practical approximation.
+        recon = sampled.resize((w, h), Image.Resampling.LANCZOS)
+    else:
+        recon = sampled.resize((w, h), interp_map[interp_name])
 
     m = mse(img,recon)
     p = psnr(m)
