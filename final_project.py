@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 import io
 
 st.set_page_config(
-    page_title="Digital Signal Sampling & Reconstruction Simulator",
+    page_title="Digital Signal Sampling And Reconstruction Simulator",
     layout="wide",
     page_icon="🔬"
 )
@@ -63,8 +63,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<h1 class="main-header">Digital Signal Sampling & Reconstruction Simulator</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subheader">Explore Nyquist-Shannon's Sampling and Reconstruction Theory in Images and Audio Signals</p>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">Digital Signal Sampling And Reconstruction Simulator</h1>', unsafe_allow_html=True)
+
+# FIXED LINE - Used double quotes to avoid apostrophe conflict
+st.markdown('<p class="subheader">Explore Nyquist-Shannon\'s Sampling and Reconstruction Theory in Images and Audio Signals</p>', unsafe_allow_html=True)
 
 mode = st.radio(
     "Select Domain to Explore",
@@ -75,6 +77,7 @@ st.divider()
 
 # ====================== IMAGE SAMPLING ======================
 if mode == "🖼️ Image Sampling":
+   
     st.markdown('<h3 class="section-header">How Sampling Works</h3>', unsafe_allow_html=True)
     w1, w2, w3 = st.columns(3)
     with w1:
@@ -225,7 +228,6 @@ elif mode == "🎵 Audio Sampling":
     sample_pos = np.arange(0, len(sampled) * step, step)
     full_pos = np.arange(len(audio))
 
-    # Reconstruction functions (unchanged)
     def lanczos_kernel(x, a=3):
         x = np.array(x, dtype=float)
         out = np.sinc(x) * np.sinc(x / a)
@@ -287,7 +289,7 @@ elif mode == "🎵 Audio Sampling":
     m3.metric("Sampling Rate", f"{rate} Hz")
     m4.metric("Accuracy", f"{accuracy:.2f}%")
 
-    # Plot - Clean version (no forced white background)
+    # Plot
     display = min(4000, len(audio))
     x = np.arange(display)
     fig = go.Figure()
@@ -310,7 +312,6 @@ elif mode == "🎵 Audio Sampling":
         title="Original vs Reconstructed Signal",
         height=450,
         legend=dict(font=dict(size=14))
-        # Removed plot_bgcolor and paper_bgcolor → uses default
     )
     st.plotly_chart(fig, use_container_width=True)
 
