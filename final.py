@@ -9,7 +9,7 @@ st.set_page_config(
     page_icon="📸"
 )
 
-# Enhanced CSS
+# Enhanced CSS with your requested changes
 st.markdown("""
 <style>
     .main-header {
@@ -36,32 +36,40 @@ st.markdown("""
     .image-label {
         font-size: 1.75rem;
         font-weight: 600;
-        color: #1E3A8A;
+        color: #FFFFFF !important;           /* White text as requested */
         text-align: center;
         margin-bottom: 0.8rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.6); /* Better visibility on images */
     }
 
-    /* Workflow section - slightly smaller text */
+    /* Larger dropdown options */
+    .stSelectbox select, .stSelectbox div[data-baseweb="select"] {
+        font-size: 1.3rem !important;
+    }
+    
+    /* Workflow section */
     .workflow-text {
         font-size: 1.1rem !important;
     }
 
-    /* Controls - Large text */
+    /* Controls */
     .stRadio label, .stSlider label, .stSelectbox label, .stFileUploader label {
         font-size: 1.35rem !important;
         font-weight: 600 !important;
     }
     
-    .stMarkdown, p, .stMetric label, .stMetric div {
+    /* Bigger metric titles */
+    .stMetric label {
+        font-size: 1.45rem !important;
+        font-weight: 600 !important;
+    }
+    
+    .stMarkdown, p, .stMetric div {
         font-size: 1.15rem !important;
     }
     
     .stMetric {
-        font-size: 1.3rem;
-    }
-    
-    h1, h2, h3, h4 {
-        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 1.35rem;
     }
     
     .stImage img {
@@ -74,7 +82,7 @@ st.markdown("""
 st.markdown('<h1 class="main-header">Nyquist–Shannon Sampling Explorer</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subheader">Visualize sampling, reconstruction, and aliasing in images</p>', unsafe_allow_html=True)
 
-# ================== HOW SAMPLING WORKS ==================
+# How Sampling Works
 st.markdown('<h3 class="section-header">How Sampling Works</h3>', unsafe_allow_html=True)
 
 w1, w2, w3 = st.columns(3)
@@ -180,7 +188,7 @@ if img is not None:
         st.image(img, use_container_width=True)
     
     with c2:
-        st.markdown(f'<p class="image-label">Sampled ({sw} × {sh})</p>', unsafe_allow_html=True)
+        st.markdown('<p class="image-label">Sampled</p>', unsafe_allow_html=True)   # Removed resolution
         st.image(sampled, use_container_width=True)
     
     with c3:
