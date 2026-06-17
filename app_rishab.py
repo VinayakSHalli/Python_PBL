@@ -220,6 +220,8 @@ def load_audio(file_obj):
 
 if uploaded_file:
     fs, audio = load_audio(io.BytesIO(uploaded_file.read()))
+else:
+    fs, audio = load_audio("101_1b1_Pr_sc_Meditron.wav")
 
 # =========================
 # AUDIO PLAYBACK
