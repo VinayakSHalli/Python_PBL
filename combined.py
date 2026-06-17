@@ -13,7 +13,6 @@ st.set_page_config(
     page_icon="🔬"
 )
 
-# ====================== CSS ======================
 st.markdown("""
 <style>
     .main-header {
@@ -31,30 +30,80 @@ st.markdown("""
         font-size: 1.4rem;
         margin-bottom: 2rem;
     }
-    .section-header {
+    .section-header-lg {
         font-size: 2.0rem;
         font-weight: 600;
         color: #1E40AF;
         margin: 2rem 0 1rem 0;
     }
-    .image-label {
-        font-size: 1.85rem !important;
+    .section-header-md {
+        font-size: 1.7rem;
         font-weight: 600;
-        color: #FFFFFF !important;
+        color: #1E40AF;
+        margin: 2rem 0 1rem 0;
+    }
+    .image-label {
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: #FFFFFF;
         text-align: center;
         margin-bottom: 0.8rem;
         text-shadow: 0 2px 4px rgba(0,0,0,0.6);
     }
-    .stSelectbox label, .stRadio label, .stSlider label, .stNumberInput label {
-        font-size: 1.35rem !important;
+    .col-body {
+        font-size: 1.6rem;
+    }
+
+    /* Radio: "Select Domain to Explore" label + options */
+    div[data-testid="stRadio"]:has(> label) > label {
+        font-size: 2rem !important;
         font-weight: 600 !important;
     }
-    .stMetric label {
-        font-size: 1.45rem !important;
+    div[data-testid="stRadio"] div[role="radiogroup"] label span {
+        font-size: 2rem !important;
     }
-    .stMetric [data-testid="stMetricValue"] {
-        font-size: 2.1rem !important;
+
+    /* Image Source radio label + options */
+    .source-radio label {
+        font-size: 2rem !important;
+        font-weight: 600 !important;
+    }
+    .source-radio div[role="radiogroup"] label span {
+        font-size: 1.7rem !important;
+    }
+
+    /* Slider, selectbox, file uploader, number input labels (image section) */
+    div[data-testid="stSlider"] label,
+    div[data-testid="stSelectbox"] label,
+    div[data-testid="stFileUploader"] label {
+        font-size: 1.7rem !important;
+        font-weight: 600 !important;
+    }
+
+    /* Number input label (audio section) — overridden inline via container */
+    div[data-testid="stNumberInput"] label {
+        font-size: 2rem !important;
+        font-weight: 600 !important;
+    }
+
+    /* Metric labels */
+    div[data-testid="stMetric"] label {
+        font-size: 1.7rem !important;
+    }
+    /* Metric values */
+    div[data-testid="stMetric"] div[data-testid="stMetricValue"] {
+        font-size: 1.8rem !important;
         font-weight: 700;
+    }
+
+    /* Alert text */
+    div[data-testid="stAlert"] p {
+        font-size: 1.8rem !important;
+    }
+
+    /* Caption */
+    div[data-testid="stCaptionContainer"] p {
+        font-size: 1.7rem !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -72,15 +121,15 @@ st.divider()
 
 # ====================== IMAGE SAMPLING ======================
 if mode == "🖼️ Image Sampling":
-    
-    st.markdown('<h3 class="section-header">How Sampling Works</h3>', unsafe_allow_html=True)
+
+    st.markdown('<h3 class="section-header-md">How Sampling Works</h3>', unsafe_allow_html=True)
     w1, w2, w3 = st.columns(3)
     with w1:
-        st.markdown('<p><strong>1. Original Image</strong><br>High-resolution reference</p>', unsafe_allow_html=True)
+        st.markdown('<p class="col-body"><strong>1. Original Image</strong><br>High-resolution reference</p>', unsafe_allow_html=True)
     with w2:
-        st.markdown('<p><strong>2. Sampling</strong><br>Downsample (fewer spatial samples)</p>', unsafe_allow_html=True)
+        st.markdown('<p class="col-body"><strong>2. Sampling</strong><br>Downsample (fewer spatial samples)</p>', unsafe_allow_html=True)
     with w3:
-        st.markdown('<p><strong>3. Reconstruction</strong><br>Upscale with interpolation</p>', unsafe_allow_html=True)
+        st.markdown('<p class="col-body"><strong>3. Reconstruction</strong><br>Upscale with interpolation</p>', unsafe_allow_html=True)
 
     st.divider()
 
@@ -151,11 +200,10 @@ if mode == "🖼️ Image Sampling":
             }
             recon = sampled.resize((w, h), interp_map[interp_name])
 
-        # FIXED LINE
         m = np.mean((np.array(img, dtype=np.float32) - np.array(recon, dtype=np.float32)) ** 2)
         p = float("inf") if m == 0 else 20 * math.log10(255.0 / math.sqrt(m))
 
-        st.markdown('<h3 class="section-header">Visual Comparison</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 class="section-header-md">Visual Comparison</h3>', unsafe_allow_html=True)
         c1, c2, c3 = st.columns(3)
         with c1:
             st.markdown('<p class="image-label">Original</p>', unsafe_allow_html=True)
@@ -168,7 +216,7 @@ if mode == "🖼️ Image Sampling":
             st.image(recon, use_container_width=True)
 
         st.divider()
-        st.markdown('<h3 class="section-header">Quality Metrics</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 class="section-header-lg">Quality Metrics</h3>', unsafe_allow_html=True)
         m1, m2, m3 = st.columns(3)
         with m1: st.metric("Sampled Resolution", f"{sw} × {sh}")
         with m2: st.metric("Mean Squared Error (MSE)", f"{m:.2f}")
@@ -184,7 +232,8 @@ if mode == "🖼️ Image Sampling":
 
 # ====================== AUDIO SAMPLING ======================
 elif mode == "🎵 Audio Sampling":
-    st.markdown("### Upload Audio Signal (.wav)")
+
+    st.markdown('<h3 class="section-header-md">Upload Audio Signal (.wav)</h3>', unsafe_allow_html=True)
     uploaded_file = st.file_uploader("", type=["wav"], label_visibility="collapsed")
 
     def load_audio(file_obj):
@@ -204,10 +253,9 @@ elif mode == "🎵 Audio Sampling":
             st.warning("Please upload a .wav file to begin")
             st.stop()
 
-    st.markdown("### Original Signal")
+    st.markdown('<h3 class="section-header-md">Original Signal</h3>', unsafe_allow_html=True)
     st.audio((audio * 32767).astype(np.int16), sample_rate=fs)
 
-    # FFT Analysis
     fft_vals = np.abs(np.fft.rfft(audio))
     fft_freqs = np.fft.rfftfreq(len(audio), 1/fs)
     dominant_frequency = float(fft_freqs[np.argmax(fft_vals[1:]) + 1])
@@ -219,7 +267,7 @@ elif mode == "🎵 Audio Sampling":
     with col1:
         rate = int(st.number_input("Sampling Rate (Hz)", min_value=1, value=max(1000, nyquist), step=100))
     with col2:
-        method = st.selectbox("Reconstruction Method", 
+        method = st.selectbox("Reconstruction Method",
                             ["Nearest Neighbor", "Linear", "Cubic", "Lanczos", "Sinc"])
 
     step = max(1, int(fs / rate))
@@ -227,7 +275,6 @@ elif mode == "🎵 Audio Sampling":
     sample_pos = np.arange(0, len(sampled) * step, step)
     full_pos = np.arange(len(audio))
 
-    # Reconstruction functions
     def lanczos_kernel(x, a=3):
         x = np.array(x, dtype=float)
         out = np.sinc(x) * np.sinc(x / a)
@@ -276,26 +323,29 @@ elif mode == "🎵 Audio Sampling":
     if max_amp > 0:
         reconstructed_audio = reconstructed_audio / max_amp
 
-    st.markdown("### Reconstructed Signal")
+    st.markdown('<h3 class="section-header-md">Reconstructed Signal</h3>', unsafe_allow_html=True)
     st.audio((reconstructed_audio * 32767).astype(np.int16), sample_rate=fs)
 
     error = audio - reconstructed
     accuracy = max(0, min(100, 100 - np.mean(np.abs(error)) * 100))
 
-    st.markdown("## Signal Metrics")
+    st.markdown('<h2 class="section-header-lg">Signal Metrics</h2>', unsafe_allow_html=True)
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("Dominant Frequency", f"{dominant_frequency:.2f} Hz")
     m2.metric("Nyquist Rate", f"{nyquist} Hz")
     m3.metric("Sampling Rate", f"{rate} Hz")
     m4.metric("Accuracy", f"{accuracy:.2f}%")
 
-    # Plot
     display = min(4000, len(audio))
     x = np.arange(display)
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=x, y=audio[:display], name="Original", line=dict(color="#0B2545", width=2.5)))
     fig.add_trace(go.Scatter(x=x, y=reconstructed[:display], name="Reconstructed", line=dict(color="#8B5E34", width=2.5)))
-    fig.update_layout(title="Original vs Reconstructed Signal", height=450)
+    fig.update_layout(
+        title="Original vs Reconstructed Signal",
+        title_font_size=28,
+        height=450
+    )
     st.plotly_chart(fig, use_container_width=True)
 
     if rate < nyquist:
