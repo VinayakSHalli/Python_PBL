@@ -106,4 +106,4 @@ with st.sidebar:
     st.info(method_descriptions[interp_name])
 
 # --- Main App Layout ---
-st.title("✨ Nyquist–Shannon Image Sampling
+st.title("✨ Nyquist–Shannon Image Sampling & Reconstruction Simulator")
