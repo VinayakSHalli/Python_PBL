@@ -4,12 +4,12 @@ from PIL import Image
 import math
 
 st.set_page_config(
-    page_title="Nyquist–Shannon Image Sampling Explorer",
+    page_title="Nyquist–Shannon Image Sampling & Reconstruction Simulator",
     layout="wide",
     page_icon="📸"
 )
 
-# Enhanced CSS with your requested changes
+# Enhanced CSS
 st.markdown("""
 <style>
     .main-header {
@@ -36,24 +36,32 @@ st.markdown("""
     .image-label {
         font-size: 1.75rem;
         font-weight: 600;
-        color: #FFFFFF !important;           /* White text as requested */
+        color: #FFFFFF !important;
         text-align: center;
         margin-bottom: 0.8rem;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.6); /* Better visibility on images */
+        text-shadow: 0 2px 4px rgba(0,0,0,0.6);
     }
 
-    /* Larger dropdown options */
-    .stSelectbox select, .stSelectbox div[data-baseweb="select"] {
-        font-size: 1.3rem !important;
+    /* Make dropdown options same size as the label */
+    .stSelectbox label {
+        font-size: 1.35rem !important;
+        font-weight: 600 !important;
     }
     
+    .stSelectbox select, 
+    .stSelectbox div[data-baseweb="select"],
+    .stSelectbox div[role="listbox"] div,
+    .stSelectbox option {
+        font-size: 1.35rem !important;
+    }
+
     /* Workflow section */
     .workflow-text {
         font-size: 1.1rem !important;
     }
 
-    /* Controls */
-    .stRadio label, .stSlider label, .stSelectbox label, .stFileUploader label {
+    /* Other controls */
+    .stRadio label, .stSlider label, .stFileUploader label {
         font-size: 1.35rem !important;
         font-weight: 600 !important;
     }
@@ -188,7 +196,7 @@ if img is not None:
         st.image(img, use_container_width=True)
     
     with c2:
-        st.markdown('<p class="image-label">Sampled</p>', unsafe_allow_html=True)   # Removed resolution
+        st.markdown('<p class="image-label">Sampled</p>', unsafe_allow_html=True)
         st.image(sampled, use_container_width=True)
     
     with c3:
@@ -220,5 +228,3 @@ if img is not None:
 
 else:
     st.info("Choose a pattern or upload an image to begin")
-
-st.caption("Nyquist–Shannon Image Sampling & Reconstruction Simulator")
