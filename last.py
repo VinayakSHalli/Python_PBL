@@ -49,7 +49,7 @@ st.markdown("""
         font-size: 1.35rem !important;
         font-weight: 600 !important;
     }
-    /* Larger radio buttons specifically */
+    /* Larger radio buttons */
     div[data-testid="stRadio"] label {
         font-size: 1.55rem !important;
         font-weight: 700 !important;
@@ -86,6 +86,7 @@ if mode == "🖼️ Image Sampling":
     with w3:
         st.markdown('<p><strong>3. Reconstruction</strong><br>Upscale with interpolation</p>', unsafe_allow_html=True)
     st.divider()
+    
     col_ctrl1, col_ctrl2 = st.columns([1, 1])
     with col_ctrl1:
         source = st.radio(
@@ -151,7 +152,6 @@ if mode == "🖼️ Image Sampling":
             }
             recon = sampled.resize((w, h), interp_map[interp_name])
 
-        # FIXED LINE
         m = np.mean((np.array(img, dtype=np.float32) - np.array(recon, dtype=np.float32)) ** 2)
         p = float("inf") if m == 0 else 20 * math.log10(255.0 / math.sqrt(m))
 
@@ -289,13 +289,32 @@ elif mode == "🎵 Audio Sampling":
     m3.metric("Sampling Rate", f"{rate} Hz")
     m4.metric("Accuracy", f"{accuracy:.2f}%")
 
-    # Plot
+    # Plot - Updated with Light Blue for Original
     display = min(4000, len(audio))
     x = np.arange(display)
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=x, y=audio[:display], name="Original", line=dict(color="#0B2545", width=2.5)))
-    fig.add_trace(go.Scatter(x=x, y=reconstructed[:display], name="Reconstructed", line=dict(color="#8B5E34", width=2.5)))
-    fig.update_layout(title="Original vs Reconstructed Signal", height=450)
+    
+    fig.add_trace(go.Scatter(
+        x=x, 
+        y=audio[:display], 
+        name="Original", 
+        line=dict(color="#60A5FA", width=2.8)   # Light Blue
+    ))
+    
+    fig.add_trace(go.Scatter(
+        x=x, 
+        y=reconstructed[:display], 
+        name="Reconstructed", 
+        line=dict(color="#8B5E34", width=2.5)
+    ))
+    
+    fig.update_layout(
+        title="Original vs Reconstructed Signal",
+        height=450,
+        plot_bgcolor="#f8fafc",
+        paper_bgcolor="#ffffff",
+        legend=dict(font=dict(size=14))
+    )
     st.plotly_chart(fig, use_container_width=True)
 
     if rate < nyquist:
