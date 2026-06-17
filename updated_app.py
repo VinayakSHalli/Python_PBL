@@ -27,12 +27,6 @@ def vertical_stripes(size=512, stripe=4):
         arr[:, i] = 255 if (i // stripe) % 2 == 0 else 0
     return Image.fromarray(arr).convert("RGB")
 
-def sine_grating(size=512, cycles=40):
-    x = np.linspace(0, 2*np.pi*cycles, size)
-    row = ((np.sin(x)+1)/2*255).astype(np.uint8)
-    arr = np.tile(row, (size,1))
-    return Image.fromarray(arr).convert("RGB")
-
 def mse(a,b):
     aa=np.asarray(a).astype(np.float32)
     bb=np.asarray(b).astype(np.float32)
@@ -45,7 +39,7 @@ def psnr(m):
 
 source = st.radio(
     "Image source",
-    ["Upload image","Checkerboard","Vertical stripes","Sine grating"],
+    ["Upload image","Checkerboard","Vertical stripes"],
     horizontal=True
 )
 
@@ -59,8 +53,6 @@ else:
         img = checkerboard()
     elif source == "Vertical stripes":
         img = vertical_stripes()
-    else:
-        img = sine_grating()
 
 sampling = st.slider("Effective Sampling Density (%)", 5, 100, 100, 5)
 
