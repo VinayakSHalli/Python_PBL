@@ -13,11 +13,11 @@ st.set_page_config(
     page_icon="🔬"
 )
 
-# ====================== IMPROVED CSS WITH BETTER HIERARCHY ======================
+# ====================== CSS ======================
 st.markdown("""
 <style>
     .main-header {
-        font-size: 3.4rem;
+        font-size: 3.2rem;
         font-weight: 700;
         background: linear-gradient(90deg, #1E3A8A, #3B82F6);
         -webkit-background-clip: text;
@@ -28,61 +28,33 @@ st.markdown("""
     .subheader {
         text-align: center;
         color: #475569;
-        font-size: 1.55rem;
-        margin-bottom: 2.2rem;
+        font-size: 1.4rem;
+        margin-bottom: 2rem;
     }
-    
-    /* Mode Selector - Made much larger as requested */
-    .stRadio label {
-        font-size: 1.65rem !important;
-        font-weight: 600 !important;
-    }
-    .stRadio div[role="radiogroup"] label div {
-        font-size: 1.6rem !important;
-    }
-
     .section-header {
-        font-size: 2.15rem;
+        font-size: 2.0rem;
         font-weight: 600;
         color: #1E40AF;
-        margin: 2.2rem 0 1.2rem 0;
+        margin: 2rem 0 1rem 0;
     }
-    
     .image-label {
-        font-size: 1.95rem !important;
+        font-size: 1.85rem !important;
         font-weight: 600;
         color: #FFFFFF !important;
         text-align: center;
         margin-bottom: 0.8rem;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.65);
+        text-shadow: 0 2px 4px rgba(0,0,0,0.6);
     }
-
-    /* Control Labels - Good hierarchy */
-    .stSelectbox label, .stRadio label, .stSlider label, 
-    .stNumberInput label, .stFileUploader label {
-        font-size: 1.4rem !important;
+    .stSelectbox label, .stRadio label, .stSlider label, .stNumberInput label {
+        font-size: 1.35rem !important;
         font-weight: 600 !important;
     }
-
-    /* Metric Labels & Values */
     .stMetric label {
         font-size: 1.45rem !important;
-        font-weight: 600;
     }
     .stMetric [data-testid="stMetricValue"] {
-        font-size: 2.25rem !important;
+        font-size: 2.1rem !important;
         font-weight: 700;
-    }
-
-    /* General content text */
-    .stMarkdown p, .stMarkdown div {
-        font-size: 1.15rem;
-        line-height: 1.6;
-    }
-
-    .stImage img {
-        border-radius: 12px;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -90,12 +62,10 @@ st.markdown("""
 st.markdown('<h1 class="main-header">Nyquist–Shannon Sampling Explorer</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subheader">Explore Sampling Theory in Images & Audio Signals</p>', unsafe_allow_html=True)
 
-# ====================== MODE SELECTOR ======================
 mode = st.radio(
     "Select Domain to Explore",
     ["🖼️ Image Sampling", "🎵 Audio Sampling"],
-    horizontal=True,
-    label_visibility="visible"
+    horizontal=True
 )
 
 st.divider()
@@ -127,7 +97,6 @@ if mode == "🖼️ Image Sampling":
             min_value=5, max_value=100, value=100, step=5
         )
 
-    # ... [Rest of your image code remains the same] ...
     def checkerboard(size=512, block=8):
         y, x = np.indices((size, size))
         arr = (((x // block) + (y // block)) % 2) * 255
@@ -182,6 +151,7 @@ if mode == "🖼️ Image Sampling":
             }
             recon = sampled.resize((w, h), interp_map[interp_name])
 
+        # FIXED LINE
         m = np.mean((np.array(img, dtype=np.float32) - np.array(recon, dtype=np.float32)) ** 2)
         p = float("inf") if m == 0 else 20 * math.log10(255.0 / math.sqrt(m))
 
@@ -214,12 +184,9 @@ if mode == "🖼️ Image Sampling":
 
 # ====================== AUDIO SAMPLING ======================
 elif mode == "🎵 Audio Sampling":
-    st.markdown('<h3 class="section-header">Audio Signal Sampling</h3>', unsafe_allow_html=True)
-    
     st.markdown("### Upload Audio Signal (.wav)")
     uploaded_file = st.file_uploader("", type=["wav"], label_visibility="collapsed")
 
-    # ... (rest of your audio code stays the same) ...
     def load_audio(file_obj):
         fs, audio = wavfile.read(file_obj)
         if len(audio.shape) > 1:
@@ -240,7 +207,7 @@ elif mode == "🎵 Audio Sampling":
     st.markdown("### Original Signal")
     st.audio((audio * 32767).astype(np.int16), sample_rate=fs)
 
-    # FFT + Controls + Reconstruction (same as before)
+    # FFT Analysis
     fft_vals = np.abs(np.fft.rfft(audio))
     fft_freqs = np.fft.rfftfreq(len(audio), 1/fs)
     dominant_frequency = float(fft_freqs[np.argmax(fft_vals[1:]) + 1])
@@ -255,8 +222,87 @@ elif mode == "🎵 Audio Sampling":
         method = st.selectbox("Reconstruction Method", 
                             ["Nearest Neighbor", "Linear", "Cubic", "Lanczos", "Sinc"])
 
-    # [Rest of audio processing, plots, metrics, etc. remain unchanged...]
+    step = max(1, int(fs / rate))
+    sampled = audio[::step]
+    sample_pos = np.arange(0, len(sampled) * step, step)
+    full_pos = np.arange(len(audio))
 
-    # ... (Keep all your audio reconstruction, plots, and conclusion code here) ...
+    # Reconstruction functions
+    def lanczos_kernel(x, a=3):
+        x = np.array(x, dtype=float)
+        out = np.sinc(x) * np.sinc(x / a)
+        out[np.abs(x) >= a] = 0
+        return out
+
+    def lanczos_resample(sample_pos, sampled, full_pos, a=3):
+        reconstructed = np.zeros(len(full_pos))
+        for i, t in enumerate(full_pos):
+            x = (t - sample_pos) / np.mean(np.diff(sample_pos))
+            weights = lanczos_kernel(x, a)
+            s = np.sum(weights)
+            if abs(s) > 1e-12:
+                reconstructed[i] = np.sum(sampled * weights) / s
+        return reconstructed
+
+    def sinc_resample(sample_pos, sampled, full_pos, window=8):
+        reconstructed = np.zeros(len(full_pos))
+        Ts = np.mean(np.diff(sample_pos))
+        for i, t in enumerate(full_pos):
+            x = (t - sample_pos) / Ts
+            mask = np.abs(x) <= window
+            x_local = x[mask]
+            samples_local = sampled[mask]
+            weights = np.sinc(x_local)
+            hamming = (0.54 + 0.46 * np.cos(np.pi * x_local / window))
+            weights *= hamming
+            s = np.sum(weights)
+            if abs(s) > 1e-12:
+                reconstructed[i] = np.sum(samples_local * weights) / s
+        return reconstructed
+
+    if method == "Nearest Neighbor":
+        reconstructed = interp1d(sample_pos, sampled, kind="nearest", fill_value="extrapolate")(full_pos)
+    elif method == "Linear":
+        reconstructed = interp1d(sample_pos, sampled, kind="linear", fill_value="extrapolate")(full_pos)
+    elif method == "Cubic":
+        reconstructed = interp1d(sample_pos, sampled, kind="cubic", fill_value="extrapolate")(full_pos)
+    elif method == "Lanczos":
+        reconstructed = lanczos_resample(sample_pos, sampled, full_pos)
+    elif method == "Sinc":
+        reconstructed = sinc_resample(sample_pos, sampled, full_pos)
+
+    reconstructed_audio = reconstructed.copy()
+    max_amp = np.max(np.abs(reconstructed_audio))
+    if max_amp > 0:
+        reconstructed_audio = reconstructed_audio / max_amp
+
+    st.markdown("### Reconstructed Signal")
+    st.audio((reconstructed_audio * 32767).astype(np.int16), sample_rate=fs)
+
+    error = audio - reconstructed
+    accuracy = max(0, min(100, 100 - np.mean(np.abs(error)) * 100))
+
+    st.markdown("## Signal Metrics")
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("Dominant Frequency", f"{dominant_frequency:.2f} Hz")
+    m2.metric("Nyquist Rate", f"{nyquist} Hz")
+    m3.metric("Sampling Rate", f"{rate} Hz")
+    m4.metric("Accuracy", f"{accuracy:.2f}%")
+
+    # Plot
+    display = min(4000, len(audio))
+    x = np.arange(display)
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=x, y=audio[:display], name="Original", line=dict(color="#0B2545", width=2.5)))
+    fig.add_trace(go.Scatter(x=x, y=reconstructed[:display], name="Reconstructed", line=dict(color="#8B5E34", width=2.5)))
+    fig.update_layout(title="Original vs Reconstructed Signal", height=450)
+    st.plotly_chart(fig, use_container_width=True)
+
+    if rate < nyquist:
+        st.error("ALIASING DETECTED - Sampling below Nyquist rate")
+    elif rate < 1.5 * nyquist:
+        st.warning("ACCEPTABLE RECONSTRUCTION")
+    else:
+        st.success("HIGH-FIDELITY RECONSTRUCTION")
 
 st.caption("Nyquist–Shannon Sampling Explorer • Images + Audio")
