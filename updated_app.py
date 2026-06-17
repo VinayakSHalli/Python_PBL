@@ -9,9 +9,6 @@ st.set_page_config(page_title="Nyquist–Shannon Image Sampling Explorer", layou
 st.title("📷 Nyquist–Shannon Image Sampling & Reconstruction Simulator")
 
 st.markdown("""
-This educational simulator treats a high-resolution image as an approximation of a
-continuous scene and demonstrates the effect of reducing the **sampling density**.
-
 **Workflow**
 1. Original image (reference)
 2. Downsample (simulate fewer spatial samples)
