@@ -37,21 +37,21 @@ st.markdown("""
     .sec-header {
         font-size: 2.0rem;
         font-weight: 600;
-        color: #1E40AF;
+        color: #31333F;
         margin: 2rem 0 0.8rem 0;
         padding-bottom: 0.3rem;
-        border-bottom: 2px solid #DBEAFE;
+        border-bottom: 2px solid #E2E8F0;
     }
     .col-body {
         font-size: 1.1rem;
         line-height: 1.6;
         color: #475569;
     }
-    .col-body strong { color: #1E3A8A; font-weight: 600; }
+    .col-body strong { color: #31333F; font-weight: 600; }
     .image-label {
         font-size: 1.2rem;
         font-weight: 600;
-        color: #1E40AF;
+        color: #31333F;
         text-align: center;
         margin-bottom: 0.5rem;
     }
@@ -80,7 +80,7 @@ st.markdown("""
     div[data-testid="stMetric"] div[data-testid="stMetricValue"] {
         font-size: 1.6rem !important;
         font-weight: 700 !important;
-        color: #1E3A8A !important;
+        color: #31333F !important;
     }
 
     /* Alert text */
@@ -337,7 +337,7 @@ elif mode == "🎵 Audio Sampling":
     fig.update_layout(
         title="Original vs Reconstructed Signal",
         title_font_size=20,
-        title_font_color="#1E40AF",
+        title_font_color="#31333F",
         height=450,
         font=dict(size=13),
         legend=dict(font=dict(size=13)),
